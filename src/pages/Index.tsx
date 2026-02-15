@@ -3,8 +3,16 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { UserTable } from "@/components/UserTable";
 import { TopupDialog } from "@/components/TopupDialog";
+import { StatsCards } from "@/components/StatsCards";
 import { fetchUsers, addTokens, type User } from "@/lib/api";
-import { RefreshCw, Search, Users, Coins, ArrowUpDown } from "lucide-react";
+import {
+  RefreshCw,
+  Search,
+  ArrowUpDown,
+  Coins,
+  Shield,
+  LayoutDashboard,
+} from "lucide-react";
 import { toast } from "sonner";
 import {
   Select,
@@ -54,12 +62,13 @@ const Index = () => {
   }, [users, search, sortBy]);
 
   const totalTokens = users.reduce((s, u) => s + (u.tokens || 0), 0);
+  const avgTokens = users.length > 0 ? Math.round(totalTokens / users.length) : 0;
 
   const handleTopup = async (userId: number, amount: number, reason: string) => {
     try {
       const res = await addTokens(userId, amount, reason);
       if (res.success) {
-        toast.success(`เติม ${amount} tokens สำเร็จ!`);
+        toast.success(`เติม ${amount.toLocaleString()} tokens สำเร็จ! 🎉`);
         loadUsers();
       } else {
         toast.error(res.message || "เกิดข้อผิดพลาด");
@@ -70,63 +79,71 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface">
-      {/* Toolbar */}
-      <header className="sticky top-0 z-10 border-b bg-background px-4 py-3 shadow-sm">
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="glass-toolbar sticky top-0 z-10 border-b px-4 py-3 shadow-sm">
         <div className="mx-auto flex max-w-6xl items-center gap-3">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-              <Coins className="h-5 w-5" />
+          <div className="flex items-center gap-3">
+            <div className="stat-card-purple flex h-10 w-10 items-center justify-center rounded-xl shadow-lg">
+              <Shield className="h-5 w-5 text-primary-foreground" />
             </div>
-            <h1 className="text-lg font-semibold tracking-tight">Admin Topup</h1>
+            <div>
+              <h1 className="flex items-center gap-1.5 text-lg font-bold tracking-tight">
+                <LayoutDashboard className="h-4 w-4 text-muted-foreground" />
+                Admin Topup
+              </h1>
+              <p className="text-xs text-muted-foreground">ระบบจัดการโทเค่น</p>
+            </div>
           </div>
 
           <div className="ml-auto flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={loadUsers} disabled={loading}>
-              <RefreshCw className={`mr-1.5 h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
+            <div className="hidden items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 text-xs font-medium text-muted-foreground sm:flex">
+              <Coins className="h-3.5 w-3.5" />
+              {users.length} ผู้ใช้
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={loadUsers}
+              disabled={loading}
+              className="gap-1.5 rounded-full"
+            >
+              <RefreshCw className={`h-3.5 w-3.5 ${loading ? "animate-spin" : ""}`} />
               รีเฟรช
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-6xl px-4 py-6">
+      <main className="mx-auto max-w-6xl px-4 py-6 space-y-6">
         {/* Stats */}
-        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-2">
-          <div className="rounded-xl border bg-card p-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Users className="h-4 w-4" />
-              <span className="text-sm">ผู้ใช้ทั้งหมด</span>
-            </div>
-            <p className="mt-1 text-2xl font-bold">{users.length}</p>
-          </div>
-          <div className="rounded-xl border bg-card p-4">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Coins className="h-4 w-4" />
-              <span className="text-sm">โทเค่นรวม</span>
-            </div>
-            <p className="mt-1 text-2xl font-bold">{totalTokens.toLocaleString()}</p>
-          </div>
-        </div>
+        <StatsCards
+          totalUsers={users.length}
+          totalTokens={totalTokens}
+          avgTokens={avgTokens}
+          loading={loading}
+        />
 
         {/* Filter bar */}
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="animate-fade-in flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="ค้นหาผู้ใช้..."
-              className="pl-9"
+              placeholder="ค้นหาชื่อ, username, หรือ ID..."
+              className="rounded-xl pl-9"
             />
           </div>
           <Select value={sortBy} onValueChange={setSortBy}>
-            <SelectTrigger className="w-[180px]">
-              <ArrowUpDown className="mr-2 h-3.5 w-3.5" />
+            <SelectTrigger className="w-[200px] rounded-xl">
+              <ArrowUpDown className="mr-2 h-3.5 w-3.5 text-muted-foreground" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="tokens">เรียงตามโทเค่น</SelectItem>
+              <SelectItem value="tokens">
+                <span className="flex items-center gap-2"><Coins className="h-3.5 w-3.5" /> เรียงตามโทเค่น</span>
+              </SelectItem>
               <SelectItem value="name">เรียงตามชื่อ</SelectItem>
               <SelectItem value="id">เรียงตาม ID</SelectItem>
             </SelectContent>
@@ -134,10 +151,22 @@ const Index = () => {
         </div>
 
         {/* Table */}
-        <div className="rounded-xl border bg-card">
+        <div className="animate-slide-up overflow-hidden rounded-2xl border bg-card shadow-sm">
+          <div className="border-b px-5 py-3">
+            <h2 className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+              <LayoutDashboard className="h-4 w-4" />
+              รายชื่อผู้ใช้
+              {!loading && (
+                <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-bold text-primary">
+                  {filtered.length}
+                </span>
+              )}
+            </h2>
+          </div>
           {loading ? (
-            <div className="flex items-center justify-center py-16">
-              <RefreshCw className="h-6 w-6 animate-spin text-muted-foreground" />
+            <div className="flex flex-col items-center justify-center py-20">
+              <RefreshCw className="h-8 w-8 animate-spin text-primary" />
+              <p className="mt-3 text-sm text-muted-foreground">กำลังโหลดข้อมูล...</p>
             </div>
           ) : (
             <UserTable
