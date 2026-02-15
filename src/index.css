@@ -2,39 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Noto+Sans+Thai:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 210 11% 15%;
+    --background: 220 14% 96%;
+    --foreground: 220 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 11% 15%;
+    --card-foreground: 220 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 11% 15%;
+    --popover-foreground: 220 15% 15%;
 
-    --primary: 214 82% 51%;
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 17% 95%;
-    --secondary-foreground: 210 11% 15%;
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 220 15% 15%;
 
     --muted: 220 14% 96%;
-    --muted-foreground: 215 14% 46%;
+    --muted-foreground: 220 9% 46%;
 
-    --accent: 151 55% 42%;
+    --accent: 262 83% 58%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 214 82% 51%;
+    --ring: 217 91% 60%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -45,31 +45,39 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
 
-    /* Custom tokens */
-    --success: 151 55% 42%;
+    /* Custom */
+    --success: 152 69% 46%;
     --success-foreground: 0 0% 100%;
     --warning: 38 92% 50%;
     --warning-foreground: 0 0% 100%;
-    --surface: 220 14% 96%;
-    --toolbar: 210 17% 98%;
-    --token-gradient-from: 38 92% 50%;
-    --token-gradient-to: 25 95% 53%;
+    --info: 199 89% 48%;
+    --info-foreground: 0 0% 100%;
+
+    /* Stat card gradients */
+    --stat-blue-from: 217 91% 60%;
+    --stat-blue-to: 199 89% 48%;
+    --stat-purple-from: 262 83% 58%;
+    --stat-purple-to: 292 84% 61%;
+    --stat-green-from: 152 69% 46%;
+    --stat-green-to: 172 66% 50%;
+    --stat-orange-from: 25 95% 53%;
+    --stat-orange-to: 38 92% 50%;
   }
 
   .dark {
-    --background: 222 84% 5%;
+    --background: 222 47% 6%;
     --foreground: 210 40% 98%;
-    --card: 222 84% 5%;
+    --card: 222 47% 9%;
     --card-foreground: 210 40% 98%;
-    --popover: 222 84% 5%;
+    --popover: 222 47% 9%;
     --popover-foreground: 210 40% 98%;
-    --primary: 214 82% 51%;
+    --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
     --secondary: 217 33% 18%;
     --secondary-foreground: 210 40% 98%;
     --muted: 217 33% 18%;
     --muted-foreground: 215 20% 65%;
-    --accent: 151 55% 42%;
+    --accent: 262 83% 58%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 63% 31%;
     --destructive-foreground: 210 40% 98%;
@@ -91,9 +99,28 @@
   * {
     @apply border-border;
   }
-
   body {
     @apply bg-background text-foreground;
-    font-family: 'Noto Sans Thai', 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Noto Sans Thai', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+}
+
+@layer utilities {
+  .stat-card-blue {
+    background: linear-gradient(135deg, hsl(217 91% 60%), hsl(199 89% 48%));
+  }
+  .stat-card-purple {
+    background: linear-gradient(135deg, hsl(262 83% 58%), hsl(292 84% 61%));
+  }
+  .stat-card-green {
+    background: linear-gradient(135deg, hsl(152 69% 46%), hsl(172 66% 50%));
+  }
+  .stat-card-orange {
+    background: linear-gradient(135deg, hsl(25 95% 53%), hsl(38 92% 50%));
+  }
+  .glass-toolbar {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 }
